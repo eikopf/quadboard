@@ -68,3 +68,4 @@ fn main() {
 - Refactor checked functions to use an `Index` type (backed by a private enum, like in halfling)
 - Add testing for all options.
 - Move RawQuadBoard to a private module and reexport it.
+- Publish to crates.io
