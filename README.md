@@ -4,7 +4,7 @@ A type-safe SIMD implementation of the [quadboard](https://www.chessprogramming.
 ## Example Usage
 
 ```rust
-use quadboard::{Quadboard, Nibble};
+use quadboard::{QuadBoard, Nibble};
 
 /// The color of a piece, with values
 /// chosen so that they map to the significand
@@ -56,7 +56,7 @@ impl TryFrom<Nibble> for Piece {
 }
 
 fn main() {
-    let qb = Quadboard::<Piece>::empty();
+    let qb = QuadBoard::<Piece>::empty();
 
     qb.write(Piece { color: Color::White, kind: Kind::Queen }, 7);
     qb.write(Piece { color: Color::Black, kind: Kind::Pawn }, 3);
