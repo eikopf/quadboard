@@ -24,11 +24,6 @@
 
 #![warn(missing_docs)]
 #![feature(portable_simd)]
-// the two following features are enabled to allow some
-// const SIMD stuff, but they seem very far from being
-// stable at the moment
-#![feature(const_trait_impl)]
-#![feature(effects)]
 
 pub use halfling::Nibble;
 use std::{marker::PhantomData, mem::MaybeUninit, simd::u64x4};
@@ -84,7 +79,7 @@ where
     /// # Panics
     /// Panics if `index >= 64`, i.e. if it is an invalid index
     /// into a [`QuadBoard`].
-    pub const fn read(&self, index: u8) -> Result<T, E> {
+    pub fn read(&self, index: u8) -> Result<T, E> {
         assert!(index < 64);
         unsafe { self.get_unchecked(index) }
     }
@@ -94,7 +89,7 @@ where
     ///
     /// # Safety
     /// `index` must be less than 64.
-    pub const unsafe fn get_unchecked(&self, index: u8) -> Result<T, E> {
+    pub unsafe fn get_unchecked(&self, index: u8) -> Result<T, E> {
         let nibble = unsafe { self.inner.get_unchecked(index) };
         T::try_from(nibble)
     }
@@ -104,7 +99,8 @@ impl<T> QuadBoard<T> {
     /// Returns an empty [`QuadBoard`], where the associated `EMPTY` value
     /// on the [`EmptyNibble`] implementation for `T` has been written to
     /// every index.
-    pub const fn empty() -> Self
+    #[inline(always)]
+    pub fn empty() -> Self
     where
         T: EmptyNibble,
     {
@@ -156,7 +152,7 @@ impl RawQuadBoard {
     }
 
     /// Creates a new [`RawQuadBoard`] with each element set to `value`.
-    pub const fn splat(value: Nibble) -> Self {
+    pub fn splat(value: Nibble) -> Self {
         let value: u8 = value.get();
 
         // extract the individual bits from the given value
@@ -166,7 +162,7 @@ impl RawQuadBoard {
         let bit_channels = u64x4::from_array([bit1, bit2, bit3, bit4]);
 
         // choose either u64::MAX or 0u64 based on the bit in each channel
-        let channels = bit_channels * u64x4::from_array([u64::MAX, u64::MAX, u64::MAX, u64::MAX]);
+        let channels = bit_channels * u64x4::splat(u64::MAX);
 
         Self { channels }
     }
@@ -175,9 +171,9 @@ impl RawQuadBoard {
     ///
     /// # Safety
     /// `index` must be strictly less than 64.
-    pub const unsafe fn get_unchecked(&self, index: u8) -> Nibble {
+    pub unsafe fn get_unchecked(&self, index: u8) -> Nibble {
         // mask off all other values and shift the remaining bits right
-        let mask = u64x4::from_array([1 << index, 1 << index, 1 << index, 1 << index]);
+        let mask = u64x4::splat(1 << index);
         let masked_board = self.channels & mask;
         let bits = masked_board >> (index as u64);
 
@@ -220,9 +216,6 @@ const fn u64x4_channel_sum(value: u64x4) -> u64 {
 /// Extracts the lower 4 bits from the given value
 /// and returns them in increasing order from left
 /// to right.
-///
-/// At some point, this function should be replaced in
-/// favour of dedicated const methods on [`Nibble`] itself.
 ///
 /// # Safety
 /// This function assumes the upper four bits of `value` are all 0.
