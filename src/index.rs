@@ -76,10 +76,10 @@ enum AllowedIndexValue {
     _3F,
 }
 
-/// A valid index into a [crate::Quadboard].
+/// A valid index into a [Quadboard](crate::Quadboard).
 ///
-/// This type guarantees the niche value optimisation, so
-/// in particular the following holds.
+/// This type guarantees that the niche value optimisation
+/// applies, so in particular the following holds.
 ///
 /// ```
 /// use quadboard::Index;

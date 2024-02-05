@@ -1,8 +1,8 @@
 use halfling::Nibble;
 use std::simd::u64x4;
 
-/// An untyped buffer of 64 [`Nibble`] values, stored
-/// densely in 4 `u64` values.
+/// An untyped quadboard representing 64 [`Nibble`] values, 
+/// implemented with the [std::simd] API.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RawQuadboard {
     channels: u64x4,

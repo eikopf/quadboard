@@ -43,8 +43,7 @@ pub trait EmptyNibble: Into<Nibble> {
     const EMPTY_NIBBLE: halfling::Nibble;
 }
 
-/// An unopinionated [quadboard](https://www.chessprogramming.org/Quad-Bitboards)
-/// implementation, using Rust's [std::simd] API for accelerated per-nibble operations.
+/// A typed [quadboard](https://www.chessprogramming.org/Quad-Bitboards) implementation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Quadboard<T> {
     inner: RawQuadboard,
@@ -81,15 +80,10 @@ where
         unsafe { std::mem::transmute_copy(&arr) }
     }
 
-    /// Reads the [`Nibble`] at the given index and
+    /// Reads the [`Nibble`] at the given [`Index`] and
     /// attempts a [`TryFrom`] conversion before returning.
-    ///
-    /// # Panics
-    /// Panics if `index >= 64`, i.e. if it is an invalid index
-    /// into a [`Quadboard`].
-    pub fn read(&self, index: u8) -> Result<T, E> {
-        assert!(index < 64);
-        unsafe { self.get_unchecked(index) }
+    pub fn read(&self, index: Index) -> Result<T, E> {
+        unsafe { self.get_unchecked(index.get()) }
     }
 
     /// Reads the [`Nibble`] at the given index without bounds checking
@@ -119,17 +113,12 @@ impl<T> Quadboard<T> {
     }
 
     /// Converts `value` into a [`Nibble`] and writes the
-    /// resulting `T` value to `index`.
-    ///
-    /// # Panics
-    /// Panics if `index >= 64`, i.e. if the given index is out of
-    /// bounds.
-    pub fn write(&mut self, value: T, index: u8)
+    /// resulting `T` value to the element at `index`.
+    pub fn write(&mut self, value: T, index: Index)
     where
         T: Into<Nibble>,
     {
-        assert!(index < 64);
-        unsafe { self.set_unchecked(value, index) };
+        unsafe { self.set_unchecked(value, index.get()) };
     }
 
     /// Converts `value` into a [`Nibble`] and writes the

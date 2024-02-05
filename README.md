@@ -4,7 +4,7 @@ A type-safe SIMD implementation of the [quadboard](https://www.chessprogramming.
 ## Example Usage
 
 ```rust
-use quadboard::{QuadBoard, Nibble};
+use quadboard::{Quadboard, Nibble};
 
 /// The color of a piece, with values
 /// chosen so that they map to the significand
@@ -56,16 +56,14 @@ impl TryFrom<Nibble> for Piece {
 }
 
 fn main() {
-    let qb = QuadBoard::<Piece>::empty();
+    let qb = Quadboard::<Piece>::empty();
 
-    qb.write(Piece { color: Color::White, kind: Kind::Queen }, 7);
-    qb.write(Piece { color: Color::Black, kind: Kind::Pawn }, 3);
-    qb.write(Piece { color: Color::White, kind: Kind::Bishop }, 25);
-    qb.write(Piece { color: Color::Black, kind: Kind::Rook }, 34);
+    qb.write(Piece { color: Color::White, kind: Kind::Queen }, 7u8.try_into().unwrap());
+    qb.write(Piece { color: Color::Black, kind: Kind::Pawn }, 3u8.try_into().unwrap());
+    qb.write(Piece { color: Color::White, kind: Kind::Bishop }, 25u8.try_into().unwrap());
+    qb.write(Piece { color: Color::Black, kind: Kind::Rook }, 34u8.try_into().unwrap());
 }
 ```
 ## TODOs
-- Refactor checked functions to use an `Index` type (backed by a private enum, like in halfling)
-- Add testing for all options.
-- Move RawQuadBoard to a private module and reexport it.
+- Add testing for all modules (including private modules).
 - Publish to crates.io
