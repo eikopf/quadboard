@@ -36,8 +36,18 @@ pub use raw_quadboard::RawQuadboard;
 pub use index::Index;
 pub use index::InvalidIndexError;
 
-/// A type whose encoding defines an explicit `EMPTY` value,
-/// representing something like an empty space.
+/// A type whose encoding into [`Nibble`] values defines 
+/// an explicit `EMPTY` value.
+///
+/// As an example, consider a `Piece` enum that has a `None`
+/// variant (or equivalently a newtype wrapper on some `Option<T>`).
+/// In this case, it makes the most sense to first write the
+/// `From<Piece> for Nibble` impl and then to define the image
+/// of `Piece::None` under `Nibble::from` as `Piece::EMPTY_NIBBLE`.
+///
+/// If the mapping has multiple values that can be considered as
+/// semantically empty, then either do not implement this trait (to
+/// avoid ambiguity) or choose one to be the "canonical" empty value.
 pub trait EmptyNibble: Into<Nibble> {
     /// The designated empty nibble for this type.
     const EMPTY_NIBBLE: halfling::Nibble;

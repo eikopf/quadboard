@@ -52,7 +52,9 @@ impl TryFrom<Nibble> for Piece {
     fn try_from(value: Nibble) -> Result<Self, Self::Error> {
         match value.get() {
             // left as an exercise to the reader...
-            todo!()
+            // with some bit twiddling, you might find
+            // it easier to write this in a branchless way
+            _ => todo!()
         }
     }
 }
