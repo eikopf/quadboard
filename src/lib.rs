@@ -20,7 +20,13 @@
 //! [`Into`], [`TryFrom`], and [`TryInto`] impls whose type parameter is [`Nibble`].
 //!
 //! # SIMD
-//! `TODO`
+//! As the `portable_simd` feature is currently nightly-only, this crate is also
+//! considered to be unstable. It's possible to write non-SIMD equivalents to the
+//! algorithms used here and provide the SIMD versions via cargo feature flags, 
+//! but my hope is that [std::simd] will be stabilised relatively soon.
+//!
+//! Contributions that help to provide a stable equivalent are welcome, though it
+//! remains a low priority.
 
 
 #![warn(missing_docs)]
