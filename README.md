@@ -1,6 +1,8 @@
 # Quadboard
 A type-safe SIMD implementation of the [quadboard](https://www.chessprogramming.org/Quad-Bitboards) data structure, originally written as part of the [konig](https://github.com/eikopf/konig) engine.
 
+The stability of this crate is contingent on the stability of the `portable_simd` feature (tracking issue [#86656](https://github.com/rust-lang/rust/issues/86656)), though in the interim this could be worked around with cargo flags.
+
 ## Example Usage
 
 ```rust
