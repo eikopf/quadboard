@@ -1,3 +1,5 @@
+//! Correct-by-construction indices into quadboards.
+
 use thiserror::Error;
 
 /// The set of possible values that an [`Index`] may take, ranging
@@ -76,13 +78,14 @@ enum AllowedIndexValue {
     _3F,
 }
 
-/// A valid index into a [Quadboard](crate::Quadboard).
+/// A valid index into a [`Quadboard`](crate::Quadboard) or
+/// [`RawQuadboard`](crate::raw_quadboard::RawQuadboard)
 ///
 /// This type guarantees that the niche value optimisation
 /// applies, so in particular the following holds.
 ///
 /// ```
-/// use quadboard::Index;
+/// use quadboard::index::Index;
 ///
 /// assert_eq!(
 ///     std::mem::size_of::<Option<Index>>(),
@@ -139,9 +142,8 @@ impl Index {
 
     /// Checks whether `value` can be safely converted into
     /// an [`Index`] using `Index::new_unchecked`. In general,
-    /// for some `x: u8`, the operation `Index::new_unchecked(x)`
-    /// is safe if and only if `Index::is_valid_index(x)` returns 
-    /// `true`.
+    /// for some `x: u8`, the result of `Index::new_unchecked(x)`
+    /// is defined if and only if `Index::is_valid_index(x)` is `true`.
     ///
     /// You should generally prefer using this function over ad hoc
     /// comparisons on an arbitrary `u8` value, unless you have additional
@@ -157,6 +159,11 @@ impl Index {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn index_is_byte_width() {
+        assert_eq!(std::mem::size_of::<Index>(), 1);
+    }
 
     #[test]
     fn niche_value_optimisation_applies_to_index() {
