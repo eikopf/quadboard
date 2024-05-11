@@ -1,10 +1,15 @@
 [package]
 name = "quadboard"
+description = "Typed fixed-length buffers of chess pieces."
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+repository = "https://github.com/eikopf/quadboard"
+keywords = ["chess", "chess-engine", "nibble", "bitboard"]
+categories = ["data-structures", "games"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-halfling = "0.4.0"
+halfling = "0.4.1"
 thiserror = "1.0.56"
