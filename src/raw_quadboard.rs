@@ -30,18 +30,18 @@ impl RawQuadboard {
         let value: u8 = value.get();
 
         // extract the individual bits from the given value
-        let (bit1, bit2, bit3, bit4) = unsafe { lower_nibble_bits(value) };
+        let (x, y, z, w) = unsafe { lower_nibble_bits(value) };
 
         // construct channels, so we have something like
         //
-        //                 the bits of `value`, from x = bit1 to w = bit4 ┐
+        //                                            the bits of `value` ┐
         // 000000000000000000000000000000000000000000000000000000000000000x
         // 000000000000000000000000000000000000000000000000000000000000000y
         // 000000000000000000000000000000000000000000000000000000000000000z
         // 000000000000000000000000000000000000000000000000000000000000000w
         // ^              ^               ^               ^               ^
         // └ bit 64       └ bit 48        └ bit 32        └ bit 16        └ bit 1
-        let bit_channels = u64x4::from_array([bit1, bit2, bit3, bit4]);
+        let bit_channels = u64x4::from_array([x, y, z, w]);
 
         // choose either u64::MAX or 0u64 based on the bit in each channel,
         // copying the lowest bit across the entire SIMD lane
